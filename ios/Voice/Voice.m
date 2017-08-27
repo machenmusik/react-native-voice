@@ -136,14 +136,17 @@
     if (error != nil) {
         [self sendEventWithName:@"onSpeechError" body:@{@"error": error[@"message"]}];
     }
-    if (bestTranscription != nil) {
-        [self sendEventWithName:@"onSpeechResults" body:@{@"value":@[bestTranscription]} ];
-    }
+    // send partial results before best and/or final
     if (transcriptions != nil) {
         [self sendEventWithName:@"onSpeechPartialResults" body:@{@"value":transcriptions} ];
     }
+    if (bestTranscription != nil) {
+        [self sendEventWithName:@"onSpeechResults" body:@{@"value":@[bestTranscription]} ];
+    }
+    // for convenience, pass available data when final
     if (isFinal != nil) {
-        [self sendEventWithName:@"onSpeechRecognized" body:@true];
+        [self sendEventWithName:@"onSpeechRecognized" body:@{@"value":@[bestTranscription],
+                                                             @"transcriptions":transcriptions}];
     }
 }
 
