@@ -156,11 +156,10 @@
 - (void) teardown {
     [self.recognitionTask cancel];
     self.recognitionTask = nil;
-    [self.audioSession setCategory:AVAudioSessionCategoryAmbient error:nil];
+//    [self.audioSession setCategory:AVAudioSessionCategoryAmbient error:nil];
     self.audioSession = nil;
 
-    
-    if (self.audioEngine.isRunning) {
+    if (self.audioEngine /*.isRunning*/) {
         [self.audioEngine stop];
         [self.recognitionRequest endAudio];
         [self.audioEngine.inputNode removeTapOnBus:0];
@@ -180,12 +179,14 @@
 RCT_EXPORT_METHOD(stopSpeech:(RCTResponseSenderBlock)callback)
 {
     [self.recognitionTask finish];
+    [self.audioEngine.inputNode removeTapOnBus:0];
     callback(false);
 }
 
 
 RCT_EXPORT_METHOD(cancelSpeech:(RCTResponseSenderBlock)callback) {
     [self.recognitionTask cancel];
+    [self.audioEngine.inputNode removeTapOnBus:0];
     callback(false);
 }
 
